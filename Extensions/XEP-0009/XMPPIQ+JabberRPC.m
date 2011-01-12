@@ -121,12 +121,15 @@
 
 
 +(NSXMLElement *)valueElementFromArray:(NSArray *)array {
+	NSXMLElement *arrayElement = [NSXMLElement elementWithName:@"array"];
 	NSXMLElement *data = [NSXMLElement elementWithName:@"data"];
 	
 	for (id object in array) {
 		[data addChild:[self valueElementFromObject:object]];
 	}
-	return [self wrapValueElementAroundElement:data];
+	
+	[arrayElement addChild:data];
+	return [self wrapValueElementAroundElement:arrayElement];
 }
 
 
