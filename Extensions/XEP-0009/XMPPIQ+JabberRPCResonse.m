@@ -11,7 +11,7 @@
 #import "NSDataAdditions.h"
 #import "NSXMLElementAdditions.h"
 #import "RFJabberRPCModule.h"
-
+#import "DDLog.h"
 
 @implementation XMPPIQ(JabberRPCResonse)
 
