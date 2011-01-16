@@ -133,7 +133,7 @@ NSString * kRFSRVResolverErrorDomain = @"kRFSRVResolverErrorDomain";
 
 - (id)initWithStream:(XMPPStream *)xmppStream
 {
-	if (self = [super init]) {
+	if ((self = [super init])) {
 		self.xmppStream = xmppStream;
 		self.results = [NSMutableArray arrayWithCapacity:1];
     }

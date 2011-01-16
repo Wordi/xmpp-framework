@@ -40,7 +40,7 @@ NSString *const RFJabberRPCErrorDomain = @"RFJabberRPCErrorDomain";
 @synthesize timer = _timer;
 
 - (id)initWithRpcID:(NSString *)rpcID timer:(NSTimer *)timer {
-	if (self = [super init]) {
+	if ((self = [super init])) {
 		self.rpcID = rpcID;
 		self.timer = timer;
 	}
