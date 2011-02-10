@@ -18,9 +18,10 @@
 {
 	NSDate *timeSent;
 	NSTimeInterval timeout;
+	NSTimer *timer;
 }
 
-+ (XMPPTimeQueryInfo *)queryInfoWithTimeout:(NSTimeInterval)timeout;
++ (XMPPTimeQueryInfo *)queryInfoWithTimeout:(NSTimeInterval)timeout timer:(NSTimer *)timer_;
 
 @property (nonatomic, readonly) NSDate *timeSent;
 @property (nonatomic, readonly) NSTimeInterval timeout;
@@ -71,17 +72,17 @@
 	
 	NSString *queryID = [xmppStream generateUUID];
 	
-	// Add query ID to list so we'll recognize it when we get a response
-	[queryIDs setObject:[XMPPTimeQueryInfo queryInfoWithTimeout:timeout]
-	             forKey:queryID];
-	
 	// In case we never get a response, we want to remove the query ID eventually,
 	// or we risk an ever increasing queryIDs array.
-	[NSTimer scheduledTimerWithTimeInterval:timeout
-									 target:self
-								   selector:@selector(removeQueryID:)
-								   userInfo:queryID
-									repeats:NO];
+	NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:timeout
+													  target:self
+													selector:@selector(removeQueryID:)
+													userInfo:queryID
+													 repeats:NO];
+	
+	// Add query ID to list so we'll recognize it when we get a response
+	[queryIDs setObject:[XMPPTimeQueryInfo queryInfoWithTimeout:timeout timer:timer]
+	             forKey:queryID];
 	
 	return queryID;
 }
@@ -417,12 +418,13 @@
 @synthesize timeSent;
 @synthesize timeout;
 
-- (id)initWithTimeout:(NSTimeInterval)to
+- (id)initWithTimeout:(NSTimeInterval)to timer:(NSTimer *)timer_
 {
 	if ((self = [super init]))
 	{
 		timeSent = [[NSDate alloc] init];
 		timeout = to;
+		timer = [timer_ retain];
 	}
 	return self;
 }
@@ -430,6 +432,8 @@
 - (void)dealloc
 {
 	[timeSent release];
+	[timer invalidate];
+	[timer release];
 	[super dealloc];
 }
 
@@ -438,9 +442,9 @@
 	return [timeSent timeIntervalSinceNow] * -1.0;
 }
 
-+ (XMPPTimeQueryInfo *)queryInfoWithTimeout:(NSTimeInterval)timeout
++ (XMPPTimeQueryInfo *)queryInfoWithTimeout:(NSTimeInterval)timeout timer:(NSTimer *)timer_
 {
-	return [[[XMPPTimeQueryInfo alloc] initWithTimeout:timeout] autorelease];
+	return [[[XMPPTimeQueryInfo alloc] initWithTimeout:timeout timer:timer_] autorelease];
 }
 
 @end
