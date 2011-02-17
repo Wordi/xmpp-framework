@@ -113,6 +113,8 @@
         return [self valueElementFromDate: object];
     } else if ([object isKindOfClass: [NSData class]]) {
         return [self valueElementFromData: object];
+    } else if ([object isKindOfClass: [NSNull class]]) {
+        return [self valueElementFromElementWithName:@"nil" value:nil];
     } else {
         return [self valueElementFromString: object];
     }

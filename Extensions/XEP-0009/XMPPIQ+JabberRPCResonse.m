@@ -160,6 +160,8 @@
 		return [self parseDate:[param stringValue]];
 	} else if ([element isEqualToString:@"base64"]) {
 		return [self parseData:[param stringValue]];
+	} else if ([element isEqualToString:@"nil"]) {
+        return [NSNull null];
 	} else {
 		// bad element
 		DDLogWarn(@"%s bad element: %@", __PRETTY_FUNCTION__, [param stringValue]);
